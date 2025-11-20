@@ -41,7 +41,18 @@ Ver `database/README.md` para más detalles sobre la instalación.
 
 ### 3. Configurar aplicación
 
-Editar `config/config.php` con tus credenciales:
+**Opción A: Script automático (Recomendado)**
+```bash
+php config/create-config.php
+```
+
+O desde el navegador:
+```
+https://tu-dominio.com/config/create-config.php
+```
+
+**Opción B: Manual**
+Copiar `config/config.example.php` a `config/config.php` y editar con tus credenciales:
 
 ```php
 'DB_HOST' => '127.0.0.1',

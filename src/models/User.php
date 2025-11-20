@@ -17,7 +17,7 @@ class User {
      * Busca un usuario por email
      */
     public function findByEmail($email) {
-        $sql = "SELECT * FROM users WHERE email = :email AND deleted_at IS NULL";
+        $sql = "SELECT * FROM users WHERE email = :email AND (deleted_at IS NULL OR deleted_at = '0000-00-00 00:00:00')";
         return $this->db->queryOne($sql, ['email' => $email]);
     }
     
@@ -36,10 +36,26 @@ class User {
         $user = $this->findByEmail($email);
         
         if (!$user) {
+            error_log("Usuario no encontrado: " . $email);
             return false;
         }
         
-        if (!password_verify($password, $user['password'])) {
+        // Debug: verificar hash
+        if (!isset($user['password']) || empty($user['password'])) {
+            error_log("Usuario sin contraseña: " . $email);
+            return false;
+        }
+        
+        // Verificar contraseña
+        $verified = password_verify($password, $user['password']);
+        
+        if (!$verified) {
+            error_log("Contraseña incorrecta para: " . $email);
+            // Debug: mostrar hash para verificar formato
+            error_log("Hash almacenado: " . substr($user['password'], 0, 20) . "...");
+        }
+        
+        if (!$verified) {
             return false;
         }
         

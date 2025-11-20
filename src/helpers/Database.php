@@ -9,7 +9,26 @@ class Database {
     private $config;
     
     public function __construct() {
-        $this->config = require __DIR__ . '/../../config/config.php';
+        $configFile = __DIR__ . '/../../config/config.php';
+        
+        if (!file_exists($configFile)) {
+            // Intentar crear config.php automáticamente
+            $createScript = __DIR__ . '/../../config/create-config.php';
+            if (file_exists($createScript)) {
+                require_once $createScript;
+                // Recargar después de crear
+                if (file_exists($configFile)) {
+                    $this->config = require $configFile;
+                } else {
+                    throw new Exception("No se pudo crear config.php. Ejecuta manualmente: php config/create-config.php");
+                }
+            } else {
+                throw new Exception("Archivo config/config.php no encontrado. Ejecuta: php config/create-config.php");
+            }
+        } else {
+            $this->config = require $configFile;
+        }
+        
         $this->connect();
     }
     
