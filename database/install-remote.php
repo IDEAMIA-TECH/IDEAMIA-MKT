@@ -1,40 +1,15 @@
 <?php
 /**
- * Script de Instalación de Base de Datos
+ * Script de Instalación de Base de Datos (Versión Remota)
  * IDEAMIA Marketing Platform
  * 
- * Este script crea todas las tablas necesarias en la base de datos
+ * Esta versión permite pasar credenciales como parámetros o variables de entorno
+ * Útil cuando config.php no está disponible
  * 
- * Uso: php database/install.php
+ * Uso: 
+ *   php database/install-remote.php
+ *   php database/install-remote.php --host=173.231.22.109 --user=ideamiadev_mkt --pass=password --db=ideamiadev_mkt
  */
-
-// Verificar si existe config.php, si no, usar config.example.php o variables de entorno
-$configFile = __DIR__ . '/../config/config.php';
-$exampleFile = __DIR__ . '/../config/config.example.php';
-
-if (!file_exists($configFile)) {
-    if (file_exists($exampleFile)) {
-        echo "\n{$red}✗ Error: No se encontró config/config.php{$reset}\n";
-        echo "{$yellow}→ Copia config/config.example.php a config/config.php y completa las credenciales{$reset}\n";
-        echo "   Comando: cp config/config.example.php config/config.php\n\n";
-        exit(1);
-    } else {
-        // Intentar usar variables de entorno o valores por defecto
-        echo "\n{$yellow}⚠ Advertencia: No se encontró config/config.php{$reset}\n";
-        echo "{$yellow}→ Usando variables de entorno o valores por defecto...{$reset}\n\n";
-        
-        $config = [
-            'DB_HOST' => getenv('DB_HOST') ?: '127.0.0.1',
-            'DB_PORT' => getenv('DB_PORT') ?: 3306,
-            'DB_NAME' => getenv('DB_NAME') ?: 'ideamiadev_mkt',
-            'DB_USER' => getenv('DB_USER') ?: 'ideamiadev_mkt',
-            'DB_PASS' => getenv('DB_PASS') ?: '',
-            'DB_CHARSET' => getenv('DB_CHARSET') ?: 'utf8mb4',
-        ];
-    }
-} else {
-    $config = require $configFile;
-}
 
 // Colores para terminal
 $green = "\033[32m";
@@ -45,8 +20,35 @@ $reset = "\033[0m";
 
 echo "\n{$blue}========================================{$reset}\n";
 echo "{$blue}  IDEAMIA Marketing Platform{$reset}\n";
-echo "{$blue}  Instalación de Base de Datos{$reset}\n";
+echo "{$blue}  Instalación de Base de Datos (Remota){$reset}\n";
 echo "{$blue}========================================{$reset}\n\n";
+
+// Obtener credenciales de parámetros de línea de comandos o variables de entorno
+$config = [
+    'DB_HOST' => getenv('DB_HOST') ?: '173.231.22.109',
+    'DB_PORT' => getenv('DB_PORT') ?: 3306,
+    'DB_NAME' => getenv('DB_NAME') ?: 'ideamiadev_mkt',
+    'DB_USER' => getenv('DB_USER') ?: 'ideamiadev_mkt',
+    'DB_PASS' => getenv('DB_PASS') ?: 'oYN&hC8RMH@GzjdB',
+    'DB_CHARSET' => getenv('DB_CHARSET') ?: 'utf8mb4',
+];
+
+// Parsear argumentos de línea de comandos
+if ($argc > 1) {
+    foreach ($argv as $arg) {
+        if (strpos($arg, '--host=') === 0) {
+            $config['DB_HOST'] = substr($arg, 7);
+        } elseif (strpos($arg, '--port=') === 0) {
+            $config['DB_PORT'] = (int)substr($arg, 7);
+        } elseif (strpos($arg, '--user=') === 0) {
+            $config['DB_USER'] = substr($arg, 7);
+        } elseif (strpos($arg, '--pass=') === 0) {
+            $config['DB_PASS'] = substr($arg, 7);
+        } elseif (strpos($arg, '--db=') === 0) {
+            $config['DB_NAME'] = substr($arg, 5);
+        }
+    }
+}
 
 // Verificar que el archivo schema.sql existe
 $schemaFile = __DIR__ . '/schema.sql';
@@ -59,6 +61,9 @@ if (!file_exists($schemaFile)) {
 // Conectar a la base de datos
 try {
     echo "{$yellow}→ Conectando a la base de datos...{$reset}\n";
+    echo "   Host: {$config['DB_HOST']}\n";
+    echo "   Base de datos: {$config['DB_NAME']}\n";
+    echo "   Usuario: {$config['DB_USER']}\n\n";
     
     $dsn = "mysql:host={$config['DB_HOST']};port={$config['DB_PORT']};charset={$config['DB_CHARSET']}";
     $pdo = new PDO($dsn, $config['DB_USER'], $config['DB_PASS'], [
@@ -221,7 +226,10 @@ try {
 } catch (PDOException $e) {
     echo "\n{$red}✗ Error de conexión a la base de datos:{$reset}\n";
     echo "  {$red}{$e->getMessage()}{$reset}\n\n";
-    echo "Verifica las credenciales en config/config.php\n";
+    echo "Verifica las credenciales:\n";
+    echo "  Host: {$config['DB_HOST']}\n";
+    echo "  Usuario: {$config['DB_USER']}\n";
+    echo "  Base de datos: {$config['DB_NAME']}\n\n";
     exit(1);
 } catch (Exception $e) {
     echo "\n{$red}✗ Error: {$e->getMessage()}{$reset}\n";

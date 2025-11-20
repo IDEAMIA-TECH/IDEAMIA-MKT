@@ -12,12 +12,27 @@ Este directorio contiene los archivos necesarios para crear la estructura de la 
 
 ### Método 1: Script Automático (Recomendado)
 
-#### Opción A: Usando PHP directamente
+#### Opción A: Usando PHP directamente (requiere config.php)
 ```bash
 php database/install.php
 ```
 
-#### Opción B: Usando script shell
+**Nota:** Si `config/config.php` no existe, el script te indicará cómo crearlo.
+
+#### Opción B: Script remoto (sin config.php)
+Si no tienes `config/config.php` en el servidor, usa el script remoto que incluye las credenciales:
+
+```bash
+php database/install-remote.php
+```
+
+Este script usa las credenciales por defecto del servidor, o puedes pasarlas como parámetros:
+
+```bash
+php database/install-remote.php --host=173.231.22.109 --user=ideamiadev_mkt --pass=tu_password --db=ideamiadev_mkt
+```
+
+#### Opción C: Usando script shell
 ```bash
 ./database/install.sh
 ```
