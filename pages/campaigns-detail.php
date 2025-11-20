@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../includes/auth-check.php';
+require_once __DIR__ . '/../includes/url-helper.php';
 
 $campaignId = $_GET['id'] ?? null;
 if (!$campaignId) {
@@ -21,6 +22,7 @@ if (!$campaignId) {
     <title>Detalle de Campaña - IDEAMIA Marketing Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         body {
@@ -83,22 +85,22 @@ if (!$campaignId) {
                 </div>
                 
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="/pages/dashboard.php">
+                    <a class="nav-link" href="<?php echo url('pages/dashboard.php'); ?>">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="/pages/clients.php">
+                    <a class="nav-link" href="<?php echo url('pages/clients.php'); ?>">
                         <i class="bi bi-people"></i> Clientes
                     </a>
-                    <a class="nav-link" href="/pages/posts.php">
+                    <a class="nav-link" href="<?php echo url('pages/posts.php'); ?>">
                         <i class="bi bi-calendar-event"></i> Publicaciones
                     </a>
-                    <a class="nav-link active" href="/pages/campaigns.php">
+                    <a class="nav-link active" href="<?php echo url('pages/campaigns.php'); ?>">
                         <i class="bi bi-megaphone"></i> Campañas
                     </a>
-                    <a class="nav-link" href="/pages/reports.php">
+                    <a class="nav-link" href="<?php echo url('pages/reports.php'); ?>">
                         <i class="bi bi-graph-up"></i> Reportes
                     </a>
-                    <a class="nav-link" href="/pages/media-library.php">
+                    <a class="nav-link" href="<?php echo url('pages/media-library.php'); ?>">
                         <i class="bi bi-images"></i> Biblioteca
                     </a>
                     
@@ -120,7 +122,7 @@ if (!$campaignId) {
             <div class="col-md-10 main-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <a href="/pages/campaigns.php" class="btn btn-outline-secondary btn-sm mb-2">
+                        <a href="<?php echo url('pages/campaigns.php'); ?>" class="btn btn-outline-secondary btn-sm mb-2">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                         <h1 id="campaignName">Cargando...</h1>
@@ -191,7 +193,7 @@ if (!$campaignId) {
         // Cargar información de la campaña
         async function loadCampaignDetail() {
             try {
-                const response = await fetch(`/api/campaigns.php?action=summary&id=${campaignId}`);
+                const response = await fetch(apiUrl('campaigns.php?action=summary&id=${campaignId}'));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -297,7 +299,7 @@ if (!$campaignId) {
                 const dateTo = new Date().toISOString().split('T')[0];
                 const dateFrom = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                 
-                const response = await fetch(`/api/campaigns.php?action=metrics&id=${campaignId}&date_from=${dateFrom}&date_to=${dateTo}`);
+                const response = await fetch(apiUrl('campaigns.php?action=metrics&id=${campaignId}&date_from=${dateFrom}&date_to=${dateTo}'));
                 const result = await response.json();
                 
                 if (result.success && result.data.length > 0) {
@@ -451,7 +453,7 @@ if (!$campaignId) {
             }
             
             try {
-                const response = await fetch('/api/campaigns.php', {
+                const response = await fetch(apiUrl('campaigns.php'), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -484,7 +486,7 @@ if (!$campaignId) {
         async function logout() {
             if (confirm('¿Estás seguro de cerrar sesión?')) {
                 try {
-                    const response = await fetch('/api/auth.php', {
+                    const response = await fetch(apiUrl('auth.php'), {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({action: 'logout'})
@@ -492,11 +494,11 @@ if (!$campaignId) {
                     
                     const result = await response.json();
                     if (result.success) {
-                        window.location.href = '/index.php';
+                        window.location.href = appUrl('index.php');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    window.location.href = '/index.php';
+                    window.location.href = appUrl('index.php');
                 }
             }
         }

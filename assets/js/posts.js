@@ -58,7 +58,7 @@ async function loadCalendarEvents(start, end, successCallback, failureCallback) 
             ...currentFilters
         });
         
-        const response = await fetch(`/api/posts.php?${params}`);
+        const response = await fetch(apiUrl('posts.php?${params}'));
         const result = await response.json();
         
         if (result.success) {
@@ -86,7 +86,7 @@ function applyFilters() {
 // Cargar lista de clientes
 async function loadClients() {
     try {
-        const response = await fetch('/api/clients.php?action=list&per_page=100');
+        const response = await fetch(apiUrl('clients.php?action=list&per_page=100'));
         const result = await response.json();
         
         if (result.success && result.data.data) {
@@ -118,7 +118,7 @@ async function loadSocialAccounts(clientId) {
     }
     
     try {
-        const response = await fetch(`/api/social-accounts.php?action=list&client_id=${clientId}`);
+        const response = await fetch(apiUrl('social-accounts.php?action=list&client_id=${clientId}'));
         const result = await response.json();
         
         if (result.success) {
@@ -173,7 +173,7 @@ function openPostModal(dateStr = null) {
 // Ver publicación
 async function viewPost(id) {
     try {
-        const response = await fetch(`/api/posts.php?action=get&id=${id}`);
+        const response = await fetch(apiUrl('posts.php?action=get&id=${id}'));
         const result = await response.json();
         
         if (result.success) {
@@ -219,7 +219,7 @@ async function viewPost(id) {
 // Editar publicación
 async function editPost(id) {
     try {
-        const response = await fetch(`/api/posts.php?action=get&id=${id}`);
+        const response = await fetch(apiUrl('posts.php?action=get&id=${id}'));
         const result = await response.json();
         
         if (result.success) {
@@ -289,7 +289,7 @@ async function savePost() {
     }
     
     try {
-        const response = await fetch('/api/posts.php', {
+        const response = await fetch(apiUrl('posts.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
@@ -327,7 +327,7 @@ async function publishNow() {
     }
     
     try {
-        const response = await fetch('/api/posts.php', {
+        const response = await fetch(apiUrl('posts.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({action: 'publish_now', id: id})
@@ -357,7 +357,7 @@ async function deletePost(id) {
     }
     
     try {
-        const response = await fetch('/api/posts.php', {
+        const response = await fetch(apiUrl('posts.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({action: 'delete', id: id})

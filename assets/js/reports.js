@@ -16,7 +16,7 @@ async function loadMetrics() {
     }
     
     try {
-        const response = await fetch(`/api/reports.php?action=metrics&client_id=${clientId}&date_from=${dateFrom}&date_to=${dateTo}`);
+        const response = await fetch(apiUrl('reports.php?action=metrics&client_id=${clientId}&date_from=${dateFrom}&date_to=${dateTo}'));
         const result = await response.json();
         
         if (result.success) {
@@ -225,7 +225,7 @@ async function saveReport() {
     }
     
     try {
-        const response = await fetch('/api/reports.php', {
+        const response = await fetch(apiUrl('reports.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -257,7 +257,7 @@ async function saveReport() {
 // Cargar reportes
 async function loadReports() {
     try {
-        const response = await fetch('/api/reports.php?action=list&per_page=10');
+        const response = await fetch(apiUrl('reports.php?action=list&per_page=10'));
         const result = await response.json();
         
         if (result.success) {
@@ -301,13 +301,13 @@ function displayReports(data) {
 
 // Descargar reporte
 function downloadReport(id) {
-    window.location.href = `/api/reports.php?action=download&id=${id}`;
+    window.location.href = apiUrl(`reports.php?action=download&id=${id}`);
 }
 
 // Cargar clientes
 async function loadClients() {
     try {
-        const response = await fetch('/api/clients.php?action=list&per_page=100');
+        const response = await fetch(apiUrl('clients.php?action=list&per_page=100'));
         const result = await response.json();
         
         if (result.success && result.data.data) {
@@ -328,7 +328,7 @@ async function loadClients() {
 // Cargar clientes para el modal
 async function loadClientsForReport() {
     try {
-        const response = await fetch('/api/clients.php?action=list&per_page=100');
+        const response = await fetch(apiUrl('clients.php?action=list&per_page=100'));
         const result = await response.json();
         
         if (result.success && result.data.data) {

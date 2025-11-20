@@ -26,7 +26,7 @@ async function loadClients(page = 1) {
     container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
     
     try {
-        const response = await fetch(`/api/clients.php?action=list&${params}`);
+        const response = await fetch(`${apiUrl('clients.php')}?action=list&${params}`);
         const result = await response.json();
         
         if (result.success) {
@@ -153,13 +153,13 @@ function openClientModal() {
 
 // Ver detalle de cliente
 function viewClient(id) {
-    window.location.href = `/pages/clients-detail.php?id=${id}`;
+    window.location.href = appUrl(`pages/clients-detail.php?id=${id}`);
 }
 
 // Editar cliente
 async function editClient(id) {
     try {
-        const response = await fetch(`/api/clients.php?action=get&id=${id}`);
+        const response = await fetch(`${apiUrl('clients.php')}?action=get&id=${id}`);
         const result = await response.json();
         
         if (result.success) {
@@ -214,7 +214,7 @@ async function saveClient() {
     }
     
     try {
-        const response = await fetch('/api/clients.php', {
+        const response = await fetch(apiUrl('clients.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
@@ -246,7 +246,7 @@ async function deleteClient(id) {
     }
     
     try {
-        const response = await fetch('/api/clients.php', {
+        const response = await fetch(apiUrl('clients.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({action: 'delete', id: id})
@@ -269,7 +269,7 @@ async function deleteClient(id) {
 // Cargar sectores para el filtro y datalist
 async function loadSectors() {
     try {
-        const response = await fetch('/api/clients.php?action=sectors');
+        const response = await fetch(`${apiUrl('clients.php')}?action=sectors`);
         const result = await response.json();
         
         if (result.success && result.data) {

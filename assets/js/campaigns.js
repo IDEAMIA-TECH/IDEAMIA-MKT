@@ -24,7 +24,7 @@ async function loadCampaigns(page = 1) {
     container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
     
     try {
-        const response = await fetch(`/api/campaigns.php?action=list&${params}`);
+        const response = await fetch(apiUrl('campaigns.php?action=list&${params}'));
         const result = await response.json();
         
         if (result.success) {
@@ -148,7 +148,7 @@ function applyFilters() {
 
 // Ver detalle de campaña
 function viewCampaign(id) {
-    window.location.href = `/pages/campaigns-detail.php?id=${id}`;
+    window.location.href = appUrl(`pages/campaigns-detail.php?id=${id}`);
 }
 
 // Sincronizar campañas desde Meta
@@ -166,7 +166,7 @@ async function syncCampaigns() {
     }
     
     try {
-        const response = await fetch('/api/campaigns.php', {
+        const response = await fetch(apiUrl('campaigns.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -197,7 +197,7 @@ async function syncCampaignMetrics(id) {
     }
     
     try {
-        const response = await fetch('/api/campaigns.php', {
+        const response = await fetch(apiUrl('campaigns.php'), {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -222,7 +222,7 @@ async function syncCampaignMetrics(id) {
 // Cargar lista de clientes
 async function loadClients() {
     try {
-        const response = await fetch('/api/clients.php?action=list&per_page=100');
+        const response = await fetch(apiUrl('clients.php?action=list&per_page=100'));
         const result = await response.json();
         
         if (result.success && result.data.data) {

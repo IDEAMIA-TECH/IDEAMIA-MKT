@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../includes/auth-check.php';
+require_once __DIR__ . '/../includes/url-helper.php';
 
 $clientId = $_GET['id'] ?? null;
 if (!$clientId) {
@@ -65,22 +66,22 @@ if (!$clientId) {
                 </div>
                 
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="/pages/dashboard.php">
+                    <a class="nav-link" href="<?php echo url('pages/dashboard.php'); ?>">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
-                    <a class="nav-link active" href="/pages/clients.php">
+                    <a class="nav-link active" href="<?php echo url('pages/clients.php'); ?>">
                         <i class="bi bi-people"></i> Clientes
                     </a>
-                    <a class="nav-link" href="/pages/posts.php">
+                    <a class="nav-link" href="<?php echo url('pages/posts.php'); ?>">
                         <i class="bi bi-calendar-event"></i> Publicaciones
                     </a>
-                    <a class="nav-link" href="/pages/campaigns.php">
+                    <a class="nav-link" href="<?php echo url('pages/campaigns.php'); ?>">
                         <i class="bi bi-megaphone"></i> Campañas
                     </a>
-                    <a class="nav-link" href="/pages/reports.php">
+                    <a class="nav-link" href="<?php echo url('pages/reports.php'); ?>">
                         <i class="bi bi-graph-up"></i> Reportes
                     </a>
-                    <a class="nav-link" href="/pages/media-library.php">
+                    <a class="nav-link" href="<?php echo url('pages/media-library.php'); ?>">
                         <i class="bi bi-images"></i> Biblioteca
                     </a>
                     
@@ -102,7 +103,7 @@ if (!$clientId) {
             <div class="col-md-10 main-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <a href="/pages/clients.php" class="btn btn-outline-secondary btn-sm mb-2">
+                        <a href="<?php echo url('pages/clients.php'); ?>" class="btn btn-outline-secondary btn-sm mb-2">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                         <h1 id="clientName">Cargando...</h1>
@@ -130,7 +131,7 @@ if (!$clientId) {
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Acciones Rápidas</h5>
-                        <a href="/pages/social-accounts.php?client_id=<?php echo htmlspecialchars($clientId); ?>" class="btn btn-primary me-2">
+                        <a href="<?php echo url('pages/social-accounts.php?client_id=<?php echo htmlspecialchars($clientId); ?>'); ?>" class="btn btn-primary me-2">
                             <i class="bi bi-link-45deg"></i> Gestionar Redes Sociales
                         </a>
                         <button class="btn btn-secondary" onclick="editClient()">
@@ -182,6 +183,7 @@ if (!$clientId) {
         </div>
     </div>
     
+    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const clientId = <?php echo json_encode($clientId); ?>;
@@ -190,7 +192,7 @@ if (!$clientId) {
         async function loadClientDetail() {
             try {
                 // Cargar información básica
-                const response = await fetch(`/api/clients.php?action=get&id=${clientId}`);
+                const response = await fetch(apiUrl('clients.php?action=get&id=${clientId}'));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -224,7 +226,7 @@ if (!$clientId) {
                 }
                 
                 // Cargar resumen
-                const summaryResponse = await fetch(`/api/clients.php?action=summary&id=${clientId}`);
+                const summaryResponse = await fetch(apiUrl('clients.php?action=summary&id=${clientId}'));
                 const summaryResult = await summaryResponse.json();
                 
                 if (summaryResult.success) {
@@ -260,7 +262,7 @@ if (!$clientId) {
         async function logout() {
             if (confirm('¿Estás seguro de cerrar sesión?')) {
                 try {
-                    const response = await fetch('/api/auth.php', {
+                    const response = await fetch(apiUrl('auth.php'), {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({action: 'logout'})
@@ -268,11 +270,11 @@ if (!$clientId) {
                     
                     const result = await response.json();
                     if (result.success) {
-                        window.location.href = '/index.php';
+                        window.location.href = appUrl('index.php');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    window.location.href = '/index.php';
+                    window.location.href = appUrl('index.php');
                 }
             }
         }

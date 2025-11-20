@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../includes/auth-check.php';
+require_once __DIR__ . '/../includes/url-helper.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -74,22 +75,22 @@ require_once __DIR__ . '/../includes/auth-check.php';
                 </div>
                 
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="/pages/dashboard.php">
+                    <a class="nav-link" href="<?php echo url('pages/dashboard.php'); ?>">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="/pages/clients.php">
+                    <a class="nav-link" href="<?php echo url('pages/clients.php'); ?>">
                         <i class="bi bi-people"></i> Clientes
                     </a>
-                    <a class="nav-link active" href="/pages/posts.php">
+                    <a class="nav-link active" href="<?php echo url('pages/posts.php'); ?>">
                         <i class="bi bi-calendar-event"></i> Publicaciones
                     </a>
-                    <a class="nav-link" href="/pages/campaigns.php">
+                    <a class="nav-link" href="<?php echo url('pages/campaigns.php'); ?>">
                         <i class="bi bi-megaphone"></i> Campañas
                     </a>
-                    <a class="nav-link" href="/pages/reports.php">
+                    <a class="nav-link" href="<?php echo url('pages/reports.php'); ?>">
                         <i class="bi bi-graph-up"></i> Reportes
                     </a>
-                    <a class="nav-link" href="/pages/media-library.php">
+                    <a class="nav-link" href="<?php echo url('pages/media-library.php'); ?>">
                         <i class="bi bi-images"></i> Biblioteca
                     </a>
                     
@@ -270,14 +271,16 @@ require_once __DIR__ . '/../includes/auth-check.php';
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/locales/es.js"></script>
-    <script src="/assets/js/posts.js"></script>
+    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
+    <script src="<?php echo url('assets/js/posts.js'); ?>"></script>
     <script>
         async function logout() {
             if (confirm('¿Estás seguro de cerrar sesión?')) {
                 try {
-                    const response = await fetch('/api/auth.php', {
+                    const response = await fetch(apiUrl('auth.php'), {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({action: 'logout'})
@@ -285,11 +288,11 @@ require_once __DIR__ . '/../includes/auth-check.php';
                     
                     const result = await response.json();
                     if (result.success) {
-                        window.location.href = '/index.php';
+                        window.location.href = appUrl('index.php');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    window.location.href = '/index.php';
+                    window.location.href = appUrl('index.php');
                 }
             }
         }

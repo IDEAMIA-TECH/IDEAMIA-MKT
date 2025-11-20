@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../includes/auth-check.php';
+require_once __DIR__ . '/../includes/url-helper.php';
 
 $clientId = $_GET['client_id'] ?? null;
 if (!$clientId) {
@@ -72,22 +73,22 @@ if (!$clientId) {
                 </div>
                 
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="/pages/dashboard.php">
+                    <a class="nav-link" href="<?php echo url('pages/dashboard.php'); ?>">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="/pages/clients.php">
+                    <a class="nav-link" href="<?php echo url('pages/clients.php'); ?>">
                         <i class="bi bi-people"></i> Clientes
                     </a>
-                    <a class="nav-link" href="/pages/posts.php">
+                    <a class="nav-link" href="<?php echo url('pages/posts.php'); ?>">
                         <i class="bi bi-calendar-event"></i> Publicaciones
                     </a>
-                    <a class="nav-link" href="/pages/campaigns.php">
+                    <a class="nav-link" href="<?php echo url('pages/campaigns.php'); ?>">
                         <i class="bi bi-megaphone"></i> Campañas
                     </a>
-                    <a class="nav-link" href="/pages/reports.php">
+                    <a class="nav-link" href="<?php echo url('pages/reports.php'); ?>">
                         <i class="bi bi-graph-up"></i> Reportes
                     </a>
-                    <a class="nav-link" href="/pages/media-library.php">
+                    <a class="nav-link" href="<?php echo url('pages/media-library.php'); ?>">
                         <i class="bi bi-images"></i> Biblioteca
                     </a>
                     
@@ -109,7 +110,7 @@ if (!$clientId) {
             <div class="col-md-10 main-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <a href="/pages/clients-detail.php?id=<?php echo htmlspecialchars($clientId); ?>" class="btn btn-outline-secondary btn-sm mb-2">
+                        <a href="<?php echo url('pages/clients-detail.php?id=<?php echo htmlspecialchars($clientId); ?>'); ?>" class="btn btn-outline-secondary btn-sm mb-2">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                         <h1><i class="bi bi-link-45deg"></i> Redes Sociales</h1>
@@ -139,6 +140,7 @@ if (!$clientId) {
         </div>
     </div>
     
+    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const clientId = <?php echo json_encode($clientId); ?>;
@@ -146,7 +148,7 @@ if (!$clientId) {
         // Cargar cuentas conectadas
         async function loadAccounts() {
             try {
-                const response = await fetch(`/api/social-accounts.php?action=list&client_id=${clientId}`);
+                const response = await fetch(apiUrl('social-accounts.php?action=list&client_id=${clientId}'));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -242,7 +244,7 @@ if (!$clientId) {
         // Conectar cuenta
         async function connectAccount() {
             try {
-                const response = await fetch('/api/social-accounts.php?action=connect&client_id=' + clientId + '&platform=facebook', {
+                const response = await fetch(apiUrl('social-accounts.php?action=connect&client_id=') + clientId + '&platform=facebook', {
                     method: 'GET'
                 });
                 
@@ -263,7 +265,7 @@ if (!$clientId) {
         // Verificar estado
         async function checkStatus(id) {
             try {
-                const response = await fetch(`/api/social-accounts.php?action=status&id=${id}`);
+                const response = await fetch(apiUrl('social-accounts.php?action=status&id=${id}'));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -294,7 +296,7 @@ if (!$clientId) {
             }
             
             try {
-                const response = await fetch('/api/social-accounts.php', {
+                const response = await fetch(apiUrl('social-accounts.php'), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'refresh_token', id: id})
@@ -321,7 +323,7 @@ if (!$clientId) {
             }
             
             try {
-                const response = await fetch('/api/social-accounts.php', {
+                const response = await fetch(apiUrl('social-accounts.php'), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'delete', id: id})
@@ -350,7 +352,7 @@ if (!$clientId) {
         async function logout() {
             if (confirm('¿Estás seguro de cerrar sesión?')) {
                 try {
-                    const response = await fetch('/api/auth.php', {
+                    const response = await fetch(apiUrl('auth.php'), {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({action: 'logout'})
@@ -358,11 +360,11 @@ if (!$clientId) {
                     
                     const result = await response.json();
                     if (result.success) {
-                        window.location.href = '/index.php';
+                        window.location.href = appUrl('index.php');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    window.location.href = '/index.php';
+                    window.location.href = appUrl('index.php');
                 }
             }
         }

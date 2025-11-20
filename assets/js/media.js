@@ -26,7 +26,7 @@ async function loadMedia(page = 1) {
     container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
     
     try {
-        const response = await fetch(`/api/media.php?action=list&${params}`);
+        const response = await fetch(apiUrl('media.php?action=list&${params}'));
         const result = await response.json();
         
         if (result.success) {
@@ -129,7 +129,7 @@ function applyFilters() {
 // Ver media
 function viewMedia(id) {
     // Abrir en nueva pestaña o mostrar modal con detalles
-    window.open(`/api/media.php?action=get&id=${id}`, '_blank');
+    window.open(apiUrl('media.php?action=get&id=${id}'), '_blank');
 }
 
 // Subir archivo
@@ -151,7 +151,7 @@ async function uploadFile() {
     if (tags) formData.append('tags', tags);
     
     try {
-        const response = await fetch('/api/media.php?action=upload', {
+        const response = await fetch(apiUrl('media.php?action=upload'), {
             method: 'POST',
             body: formData
         });
@@ -184,7 +184,7 @@ async function loadFolders(clientId) {
     }
     
     try {
-        const response = await fetch(`/api/media.php?action=folders&client_id=${clientId}`);
+        const response = await fetch(apiUrl('media.php?action=folders&client_id=${clientId}'));
         const result = await response.json();
         
         if (result.success) {
@@ -206,7 +206,7 @@ async function loadFolders(clientId) {
 // Cargar clientes
 async function loadClients() {
     try {
-        const response = await fetch('/api/clients.php?action=list&per_page=100');
+        const response = await fetch(apiUrl('clients.php?action=list&per_page=100'));
         const result = await response.json();
         
         if (result.success && result.data.data) {

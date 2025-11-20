@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../includes/auth-check.php';
+require_once __DIR__ . '/../includes/url-helper.php';
 require_once __DIR__ . '/../src/models/Notification.php';
 
 $db = new Database();
@@ -74,22 +75,22 @@ $notification = new Notification($db);
                 </div>
                 
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="/pages/dashboard.php">
+                    <a class="nav-link" href="<?php echo url('pages/dashboard.php'); ?>">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
-                    <a class="nav-link" href="/pages/clients.php">
+                    <a class="nav-link" href="<?php echo url('pages/clients.php'); ?>">
                         <i class="bi bi-people"></i> Clientes
                     </a>
-                    <a class="nav-link" href="/pages/posts.php">
+                    <a class="nav-link" href="<?php echo url('pages/posts.php'); ?>">
                         <i class="bi bi-calendar-event"></i> Publicaciones
                     </a>
-                    <a class="nav-link" href="/pages/campaigns.php">
+                    <a class="nav-link" href="<?php echo url('pages/campaigns.php'); ?>">
                         <i class="bi bi-megaphone"></i> Campañas
                     </a>
-                    <a class="nav-link" href="/pages/reports.php">
+                    <a class="nav-link" href="<?php echo url('pages/reports.php'); ?>">
                         <i class="bi bi-graph-up"></i> Reportes
                     </a>
-                    <a class="nav-link" href="/pages/media-library.php">
+                    <a class="nav-link" href="<?php echo url('pages/media-library.php'); ?>">
                         <i class="bi bi-images"></i> Biblioteca
                     </a>
                     
@@ -141,6 +142,7 @@ $notification = new Notification($db);
         </div>
     </div>
     
+    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let currentFilter = 'all';
@@ -154,7 +156,7 @@ $notification = new Notification($db);
             container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
             
             try {
-                const response = await fetch(`/api/notifications.php?action=list&unread_only=${unreadOnly}&limit=100`);
+                const response = await fetch(apiUrl('notifications.php?action=list&unread_only=${unreadOnly}&limit=100'));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -232,7 +234,7 @@ $notification = new Notification($db);
         // Marcar como leída
         async function markAsRead(id) {
             try {
-                const response = await fetch('/api/notifications.php', {
+                const response = await fetch(apiUrl('notifications.php'), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'mark_read', id: id})
@@ -254,7 +256,7 @@ $notification = new Notification($db);
             }
             
             try {
-                const response = await fetch('/api/notifications.php', {
+                const response = await fetch(apiUrl('notifications.php'), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'mark_all_read'})
@@ -278,7 +280,7 @@ $notification = new Notification($db);
             }
             
             try {
-                const response = await fetch('/api/notifications.php', {
+                const response = await fetch(apiUrl('notifications.php'), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'delete', id: id})
@@ -303,7 +305,7 @@ $notification = new Notification($db);
         async function logout() {
             if (confirm('¿Estás seguro de cerrar sesión?')) {
                 try {
-                    const response = await fetch('/api/auth.php', {
+                    const response = await fetch(apiUrl('auth.php'), {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({action: 'logout'})
@@ -311,11 +313,11 @@ $notification = new Notification($db);
                     
                     const result = await response.json();
                     if (result.success) {
-                        window.location.href = '/index.php';
+                        window.location.href = appUrl('index.php');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    window.location.href = '/index.php';
+                    window.location.href = appUrl('index.php');
                 }
             }
         }

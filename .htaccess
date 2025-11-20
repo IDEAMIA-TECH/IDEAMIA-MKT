@@ -38,13 +38,21 @@ php_value memory_limit 256M
     Header always set Content-Security-Policy "default-src 'self' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; font-src 'self' https://cdn.jsdelivr.net;"
 </IfModule>
 
-# Reglas para enrutamiento de URLs amigables
-# Redirigir todas las peticiones a index.php a menos que sea un archivo o directorio existente
+# Permitir acceso directo a páginas y API
+# No redirigir si el archivo existe
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Permitir acceso a directorios
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Excepciones para la API y páginas (permitir acceso directo)
+RewriteRule ^api/ - [L]
+RewriteRule ^pages/ - [L]
+RewriteRule ^assets/ - [L]
+
+# Reglas para enrutamiento de URLs amigables (solo si no es archivo/directorio)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L]
-
-# Excepciones para la API y páginas
-RewriteRule ^api/(.*)$ api/$1 [L]
-RewriteRule ^pages/(.*)$ pages/$1 [L]
-RewriteRule ^assets/(.*)$ assets/$1 [L]
