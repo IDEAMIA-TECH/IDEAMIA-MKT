@@ -1,0 +1,34 @@
+# Configuración Apache para IDEAMIA Marketing Platform
+
+# Habilitar rewrite engine
+RewriteEngine On
+
+# Redirigir a HTTPS (descomentar en producción)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Proteger archivos sensibles
+<FilesMatch "^(config|\.env|\.git)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Configuración PHP
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 300
+php_value memory_limit 256M
+
+# Headers de seguridad
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Prevenir acceso directo a archivos PHP en includes y src
+<FilesMatch "^(Database|Validator|User|AuthService)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+

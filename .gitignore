@@ -1,0 +1,41 @@
+# Archivos de configuración con credenciales
+config/config.php
+
+# Logs
+logs/*.log
+*.log
+
+# Archivos subidos
+uploads/*
+!uploads/.gitkeep
+
+# Cache
+cache/*
+!cache/.gitkeep
+
+# Reportes generados
+reports/*
+!reports/.gitkeep
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Composer
+/vendor/
+
+# Node modules (si se usa)
+node_modules/
+
+# Archivos temporales
+*.tmp
+*.temp
