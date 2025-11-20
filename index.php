@@ -4,35 +4,56 @@
  * IDEAMIA Marketing Platform
  */
 
-session_start();
-require_once __DIR__ . '/src/helpers/Database.php';
-require_once __DIR__ . '/src/services/AuthService.php';
+// Habilitar reporte de errores para debugging (desactivar en producción)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-$db = new Database();
-$auth = new AuthService($db);
-
-// Si ya está logueado, redirigir al dashboard
-if ($auth->isLoggedIn()) {
-    header('Location: /pages/dashboard.php');
-    exit;
-}
-
-$error = '';
-$success = '';
-
-// Procesar login si hay POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+try {
+    // Incluir archivos necesarios
+    require_once __DIR__ . '/src/helpers/Database.php';
+    require_once __DIR__ . '/src/models/User.php';
+    require_once __DIR__ . '/src/helpers/Validator.php';
+    require_once __DIR__ . '/src/services/AuthService.php';
     
-    $result = $auth->login($email, $password);
+    // Inicializar base de datos y servicio de autenticación
+    $db = new Database();
+    $auth = new AuthService($db);
     
-    if ($result['success']) {
+    // Si ya está logueado, redirigir al dashboard
+    if ($auth->isLoggedIn()) {
         header('Location: /pages/dashboard.php');
         exit;
-    } else {
-        $error = $result['error'] ?? 'Error al iniciar sesión';
     }
+    
+    $error = '';
+    $success = '';
+    
+    // Procesar login si hay POST
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        
+        if (empty($email) || empty($password)) {
+            $error = 'Por favor completa todos los campos';
+        } else {
+            $result = $auth->login($email, $password);
+            
+            if ($result['success']) {
+                header('Location: /pages/dashboard.php');
+                exit;
+            } else {
+                $error = $result['error'] ?? 'Error al iniciar sesión';
+            }
+        }
+    }
+} catch (Exception $e) {
+    // En producción, mostrar mensaje genérico
+    // En desarrollo, mostrar el error completo
+    $error = 'Error al inicializar la aplicación. Por favor contacta al administrador.';
+    if (ini_get('display_errors')) {
+        $error .= ' Detalle: ' . $e->getMessage();
+    }
+    error_log('Error en index.php: ' . $e->getMessage() . ' - ' . $e->getTraceAsString());
 }
 ?>
 <!DOCTYPE html>
