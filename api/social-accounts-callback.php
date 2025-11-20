@@ -6,6 +6,7 @@
 
 session_start();
 require_once __DIR__ . '/../src/helpers/Database.php';
+require_once __DIR__ . '/../src/helpers/UrlHelper.php';
 require_once __DIR__ . '/../src/models/SocialAccount.php';
 require_once __DIR__ . '/../src/services/MetaAPIService.php';
 
@@ -20,27 +21,23 @@ $error = $_GET['error'] ?? null;
 
 if ($error) {
     $errorDescription = $_GET['error_description'] ?? 'Error desconocido';
-    header('Location: /pages/clients.php?error=' . urlencode($errorDescription));
-    exit;
+    UrlHelper::redirect('pages/clients.php?error=' . urlencode($errorDescription));
 }
 
 if (!$code) {
-    header('Location: /pages/clients.php?error=' . urlencode('Código de autorización no recibido'));
-    exit;
+    UrlHelper::redirect('pages/clients.php?error=' . urlencode('Código de autorización no recibido'));
 }
 
 // Verificar state
 if (!isset($_SESSION['oauth_state']) || $_SESSION['oauth_state'] !== $state) {
-    header('Location: /pages/clients.php?error=' . urlencode('State inválido'));
-    exit;
+    UrlHelper::redirect('pages/clients.php?error=' . urlencode('State inválido'));
 }
 
 $clientId = $_SESSION['oauth_client_id'] ?? null;
 $platform = $_SESSION['oauth_platform'] ?? 'facebook';
 
 if (!$clientId) {
-    header('Location: /pages/clients.php?error=' . urlencode('ID de cliente no encontrado'));
-    exit;
+    UrlHelper::redirect('pages/clients.php?error=' . urlencode('ID de cliente no encontrado'));
 }
 
 try {
@@ -148,12 +145,10 @@ try {
     unset($_SESSION['oauth_state']);
     
     // Redirigir a la página del cliente
-    header('Location: /pages/clients-detail.php?id=' . $clientId . '&connected=1');
-    exit;
+    UrlHelper::redirect('pages/clients-detail.php?id=' . $clientId . '&connected=1');
     
 } catch (Exception $e) {
     error_log('Error en callback OAuth: ' . $e->getMessage());
-    header('Location: /pages/clients.php?error=' . urlencode($e->getMessage()));
-    exit;
+    UrlHelper::redirect('pages/clients.php?error=' . urlencode($e->getMessage()));
 }
 

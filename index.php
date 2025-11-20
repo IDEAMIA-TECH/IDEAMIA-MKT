@@ -13,6 +13,7 @@ try {
     require_once __DIR__ . '/src/helpers/Database.php';
     require_once __DIR__ . '/src/models/User.php';
     require_once __DIR__ . '/src/helpers/Validator.php';
+    require_once __DIR__ . '/src/helpers/UrlHelper.php';
     require_once __DIR__ . '/src/services/AuthService.php';
     
     // Inicializar base de datos y servicio de autenticación
@@ -21,8 +22,7 @@ try {
     
     // Si ya está logueado, redirigir al dashboard
     if ($auth->isLoggedIn()) {
-        header('Location: /pages/dashboard.php');
-        exit;
+        UrlHelper::redirect('pages/dashboard.php');
     }
     
     $error = '';
@@ -39,8 +39,7 @@ try {
             $result = $auth->login($email, $password);
             
             if ($result['success']) {
-                header('Location: /pages/dashboard.php');
-                exit;
+                UrlHelper::redirect('pages/dashboard.php');
             } else {
                 $error = $result['error'] ?? 'Error al iniciar sesión';
             }

@@ -5,14 +5,14 @@
  */
 
 require_once __DIR__ . '/../src/helpers/Database.php';
+require_once __DIR__ . '/../src/helpers/UrlHelper.php';
 require_once __DIR__ . '/../src/services/AuthService.php';
 
 $db = new Database();
 $auth = new AuthService($db);
 
 if (!$auth->isLoggedIn()) {
-    header('Location: /index.php');
-    exit;
+    UrlHelper::redirect('index.php');
 }
 
 // Obtener usuario actual

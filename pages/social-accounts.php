@@ -8,7 +8,8 @@ require_once __DIR__ . '/../includes/auth-check.php';
 
 $clientId = $_GET['client_id'] ?? null;
 if (!$clientId) {
-    header('Location: /pages/clients.php');
+    require_once __DIR__ . '/../src/helpers/UrlHelper.php';
+    UrlHelper::redirect('pages/clients.php');
     exit;
 }
 ?>

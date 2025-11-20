@@ -8,7 +8,8 @@ require_once __DIR__ . '/../includes/auth-check.php';
 
 $campaignId = $_GET['id'] ?? null;
 if (!$campaignId) {
-    header('Location: /pages/campaigns.php');
+    require_once __DIR__ . '/../src/helpers/UrlHelper.php';
+    UrlHelper::redirect('pages/campaigns.php');
     exit;
 }
 ?>
