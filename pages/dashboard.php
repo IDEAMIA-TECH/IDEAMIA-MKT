@@ -99,7 +99,7 @@ require_once __DIR__ . '/../includes/url-helper.php';
                 <div class="px-3 mt-3">
                     <?php
                     require_once __DIR__ . '/../src/models/Notification.php';
-                    $db = new Database();
+                    // $db ya está disponible desde auth-check.php
                     $notification = new Notification($db);
                     $unreadCount = $notification->getUnreadCount($currentUser['id']);
                     ?>

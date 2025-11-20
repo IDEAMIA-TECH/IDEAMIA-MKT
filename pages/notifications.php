@@ -8,7 +8,7 @@ require_once __DIR__ . '/../includes/auth-check.php';
 require_once __DIR__ . '/../includes/url-helper.php';
 require_once __DIR__ . '/../src/models/Notification.php';
 
-$db = new Database();
+// $db ya está disponible desde auth-check.php
 $notification = new Notification($db);
 ?>
 <!DOCTYPE html>
@@ -142,7 +142,7 @@ $notification = new Notification($db);
         </div>
     </div>
     
-    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
+    <?php require_once __DIR__ . '/../includes/js-config.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let currentFilter = 'all';
@@ -156,7 +156,7 @@ $notification = new Notification($db);
             container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
             
             try {
-                const response = await fetch(apiUrl('notifications.php?action=list&unread_only=${unreadOnly}&limit=100'));
+                const response = await fetch(apiUrl(`notifications.php?action=list&unread_only=${unreadOnly}&limit=100`));
                 const result = await response.json();
                 
                 if (result.success) {

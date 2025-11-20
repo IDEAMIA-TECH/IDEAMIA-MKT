@@ -271,10 +271,9 @@ require_once __DIR__ . '/../includes/url-helper.php';
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
+    <?php require_once __DIR__ . '/../includes/js-config.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/locales/es.js"></script>
-    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
     <script src="<?php echo url('assets/js/posts.js'); ?>"></script>
     <script>
         async function logout() {

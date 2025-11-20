@@ -140,7 +140,7 @@ if (!$clientId) {
         </div>
     </div>
     
-    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
+    <?php require_once __DIR__ . '/../includes/js-config.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const clientId = <?php echo json_encode($clientId); ?>;
@@ -148,7 +148,7 @@ if (!$clientId) {
         // Cargar cuentas conectadas
         async function loadAccounts() {
             try {
-                const response = await fetch(apiUrl('social-accounts.php?action=list&client_id=${clientId}'));
+                const response = await fetch(apiUrl(`social-accounts.php?action=list&client_id=${clientId}`));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -244,7 +244,7 @@ if (!$clientId) {
         // Conectar cuenta
         async function connectAccount() {
             try {
-                const response = await fetch(apiUrl('social-accounts.php?action=connect&client_id=') + clientId + '&platform=facebook', {
+                const response = await fetch(apiUrl(`social-accounts.php?action=connect&client_id=${clientId}&platform=facebook`), {
                     method: 'GET'
                 });
                 
@@ -265,7 +265,7 @@ if (!$clientId) {
         // Verificar estado
         async function checkStatus(id) {
             try {
-                const response = await fetch(apiUrl('social-accounts.php?action=status&id=${id}'));
+                const response = await fetch(apiUrl(`social-accounts.php?action=status&id=${id}`));
                 const result = await response.json();
                 
                 if (result.success) {

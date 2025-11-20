@@ -183,7 +183,7 @@ if (!$clientId) {
         </div>
     </div>
     
-    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
+    <?php require_once __DIR__ . '/../includes/js-config.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const clientId = <?php echo json_encode($clientId); ?>;
@@ -192,7 +192,7 @@ if (!$clientId) {
         async function loadClientDetail() {
             try {
                 // Cargar información básica
-                const response = await fetch(apiUrl('clients.php?action=get&id=${clientId}'));
+                const response = await fetch(apiUrl(`clients.php?action=get&id=${clientId}`));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -226,7 +226,7 @@ if (!$clientId) {
                 }
                 
                 // Cargar resumen
-                const summaryResponse = await fetch(apiUrl('clients.php?action=summary&id=${clientId}'));
+                const summaryResponse = await fetch(apiUrl(`clients.php?action=summary&id=${clientId}`));
                 const summaryResult = await summaryResponse.json();
                 
                 if (summaryResult.success) {

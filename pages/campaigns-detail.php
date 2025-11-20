@@ -22,7 +22,7 @@ if (!$campaignId) {
     <title>Detalle de Campaña - IDEAMIA Marketing Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <?php require_once __DIR__ . '/../includes/js-config.php'; "?>
+    <?php require_once __DIR__ . '/../includes/js-config.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         body {
@@ -193,7 +193,7 @@ if (!$campaignId) {
         // Cargar información de la campaña
         async function loadCampaignDetail() {
             try {
-                const response = await fetch(apiUrl('campaigns.php?action=summary&id=${campaignId}'));
+                const response = await fetch(apiUrl(`campaigns.php?action=summary&id=${campaignId}`));
                 const result = await response.json();
                 
                 if (result.success) {
@@ -299,7 +299,7 @@ if (!$campaignId) {
                 const dateTo = new Date().toISOString().split('T')[0];
                 const dateFrom = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                 
-                const response = await fetch(apiUrl('campaigns.php?action=metrics&id=${campaignId}&date_from=${dateFrom}&date_to=${dateTo}'));
+                const response = await fetch(apiUrl(`campaigns.php?action=metrics&id=${campaignId}&date_from=${dateFrom}&date_to=${dateTo}`));
                 const result = await response.json();
                 
                 if (result.success && result.data.length > 0) {
